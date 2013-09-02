@@ -1,0 +1,64 @@
+require 'brewby/temp_sensor'
+require 'brewby/heating_element'
+require 'brewby/timed'
+require 'temper'
+
+module Brewby
+  module Steps
+    class TempControl
+      attr_reader :input, :output, :pid, :target, :duration, :mode, :last_reading
+      
+      include Brewby::Timed
+
+      def initialize options = {}
+        @mode = options[:mode] || :manual
+        @output = 0
+        @pulse_width = options[:pulse_width] || 5000
+
+        @input = Brewby::TempSensor.new(options[:input] || 1)
+        @output = Brewby::HeatingElement.new options[:output], pulse_width: @pulse_width
+
+        if @mode == :auto
+          configure_automatic_control options
+        end
+      end
+
+      def configure_automatic_control options
+        @target = options[:target]
+        @duration = options[:duration] || 1
+
+        @pid = Temper::PID.new maximum: @pulse_width
+        @pid.tune 44, 165, 4 
+        @pid.setpoint = @target
+      end
+
+      def manual_control?
+        @mode == :manual
+      end
+
+      def automatic_control?
+        @mode == :auto
+      end
+
+      def read_input
+        @last_reading = @input.read
+      end
+
+      def set_power_level level
+        set_pulse_width (level * @pulse_width)
+      end
+
+      def calculate_power_level
+        set_pulse_width pid.control read_input
+      end
+
+      def set_pulse_width width
+        @output.pulse_width = width
+      end
+
+      def power_level
+        @output.pulse_width
+      end
+    end
+  end
+end
