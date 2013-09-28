@@ -13,7 +13,7 @@ module Brewby
       def initialize options = {}
         @mode = options[:mode] || :manual
         @output = 0
-        @pulse_width = options[:pulse_width] || 5000
+        @pulse_range = options[:pulse_range] || 5000
 
         @input = options[:input]
         @output = options[:output]
@@ -27,7 +27,7 @@ module Brewby
         @target = options[:target]
         @duration = options[:duration] || 1
 
-        @pid = Temper::PID.new maximum: @pulse_width
+        @pid = Temper::PID.new maximum: @pulse_range
         @pid.tune 44, 165, 4 
         @pid.setpoint = @target
       end
@@ -45,7 +45,7 @@ module Brewby
       end
 
       def set_power_level level
-        set_pulse_width (level * @pulse_width)
+        set_pulse_width (level * @pulse_range)
       end
 
       def calculate_power_level
