@@ -7,7 +7,7 @@ module Brewby
   module Steps
     class TempControl
       attr_reader :input, :output, :pid, :target, :duration, :mode, :last_reading, :threshold_reached
-      
+
       include Brewby::Timed
 
       def initialize options = {}
@@ -29,7 +29,7 @@ module Brewby
         @duration = options[:duration] || 1
 
         @pid = Temper::PID.new maximum: @pulse_range
-        @pid.tune 44, 165, 4 
+        @pid.tune 44, 165, 4
         @pid.setpoint = @target
       end
 
@@ -73,12 +73,13 @@ module Brewby
       def step_iteration
         calculate_power_level
         output.pulse
-        check_temp_threshold
+        check_temp_threshold unless threshold_reached
+        check_step_completion
+      end
 
-        if threshold_reached
-          if Time.now.to_i > @step_finishes_at
-            stop_timer
-          end
+      def check_step_completion
+        if threshold_reached && Time.now.to_i > @step_finishes_at
+          stop_timer
         end
       end
 
@@ -91,11 +92,9 @@ module Brewby
       end
 
       def check_temp_threshold
-        unless @threshold_reached
-          if last_reading >= target
-            @threshold_reached = true
-            @step_finishes_at = Time.now.to_i + duration_in_seconds
-          end
+        if last_reading >= target
+          @threshold_reached = true
+          @step_finishes_at = Time.now.to_i + duration_in_seconds
         end
       end
 
