@@ -15,10 +15,10 @@ module Brewby
         @output = 0
         @pulse_width = options[:pulse_width] || 5000
 
-        @input = Brewby::TempSensor.new(options[:input] || 1)
-        @output = Brewby::HeatingElement.new options[:output], pulse_width: @pulse_width
+        @input = options[:input]
+        @output = options[:output]
 
-        if @mode == :auto
+        if automatic_control?
           configure_automatic_control options
         end
       end
@@ -33,7 +33,7 @@ module Brewby
       end
 
       def manual_control?
-        @mode == :manual
+        !automatic_control?
       end
 
       def automatic_control?
@@ -41,7 +41,7 @@ module Brewby
       end
 
       def read_input
-        @last_reading = @input.read
+        @last_reading = input.read
       end
 
       def set_power_level level
@@ -53,11 +53,11 @@ module Brewby
       end
 
       def set_pulse_width width
-        @output.pulse_width = width
+        output.pulse_width = width
       end
 
       def power_level
-        @output.pulse_width
+        output.pulse_width
       end
     end
   end

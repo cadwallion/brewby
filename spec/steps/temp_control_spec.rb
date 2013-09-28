@@ -1,19 +1,23 @@
 require 'spec_helper'
 
 describe Brewby::Steps::TempControl do
+  let(:sensor) { Brewby::TempSensor.new 1 }
+  let(:adapter) { Brewby::Adapters::Test::Output.new }
+  let(:element) { Brewby::HeatingElement.new adapter, pulse_width: 5000 }
+  let(:step) { Brewby::Steps::TempControl.new input: sensor, output: element }
+
   it 'configures an input sensor' do
-    step = Brewby::Steps::TempControl.new input: 1
     step.input.should be_instance_of Brewby::TempSensor
   end
 
   it 'configures an output sensor' do
-    step = Brewby::Steps::TempControl.new output: 1
     step.output.should be_instance_of Brewby::HeatingElement
   end
 
   context 'automatic temperature control' do
     before do
-      @step = Brewby::Steps::TempControl.new mode: :auto, target: 155.0, duration: 15
+      @step = Brewby::Steps::TempControl.new mode: :auto, target: 155.0, 
+        duration: 15, output: element, input: sensor
     end
 
     it 'configures a PID controller' do
@@ -51,7 +55,7 @@ describe Brewby::Steps::TempControl do
 
   context 'manual temperature control' do
     before do
-      @step = Brewby::Steps::TempControl.new mode: :manual
+      @step = Brewby::Steps::TempControl.new mode: :manual, output: element, input: sensor
     end
 
     it 'does not create a PID controller' do
@@ -74,7 +78,8 @@ describe Brewby::Steps::TempControl do
   end
 
   it 'reads sensor input' do
-    @step = Brewby::Steps::TempControl.new mode: :auto, target: 155.0, duration: 15
+    @step = Brewby::Steps::TempControl.new mode: :auto, target: 155.0,
+      duration: 15, input: sensor, output: element
     @step.input.should_receive(:read) { 115.0 }
     @step.read_input
     @step.last_reading.should == 115.0

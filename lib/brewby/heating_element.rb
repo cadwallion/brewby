@@ -2,16 +2,16 @@ module Brewby
   class HeatingElement
     attr_accessor :pulse_width, :pulse_range
 
-    def initialize output_pin, options = {}
-      @output_pin = output_pin
+    def initialize adapter, options = {}
       @pulse_range = options[:pulse_range] || 1000
       @on = false
-      @pulse_range_start = Time.now.to_i
+      @pulse_range_end = (Time.now.to_i * 1000) + @pulse_range
+      @adapter = adapter
     end
 
     def pulse
       set_pulse_time
-      update_pulse_range
+      update_pulse_range if pulse_exceeds_range?
       
       if pulse_within_width?
         on!
@@ -20,37 +20,40 @@ module Brewby
       end
     end
 
-    def set_pulse_time time = Time.now.to_i
-      @pulse_time = time
+    def set_pulse_time
+      @pulse_time = (Time.now.to_i * 1000)
     end
 
     def pulse_within_width?
-      time_since_last_pulse = (@pulse_time - @pulse_range_start) * 1000
-      pulse_width > time_since_last_pulse
+      @pulse_time < pulse_end
+    end
+
+    def pulse_exceeds_range?
+      @pulse_time > @pulse_range_end
     end
 
     def update_pulse_range
-      elapsed_time = (@pulse_time - @pulse_range_start) * 1000
+      @pulse_range_end += @pulse_range
+    end
 
-      if elapsed_time > @pulse_range
-        @pulse_range_start += @pulse_range
-      end
+    def pulse_end
+      @pulse_range_end - (@pulse_range - @pulse_width)
     end
 
     def on!
-      @on = true
+      @adapter.on
     end
 
     def off!
-      @on = false
+      @adapter.off
     end
 
     def on?
-      @on
+      @adapter.on?
     end
 
     def off?
-      !@on
+      !on?
     end
   end
 end
