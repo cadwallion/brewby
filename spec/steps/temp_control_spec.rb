@@ -84,4 +84,56 @@ describe Brewby::Steps::TempControl do
     @step.read_input
     @step.last_reading.should == 115.0
   end
+
+  describe 'step iteration' do
+    before do
+      @step = Brewby::Steps::TempControl.new mode: :auto, target: 155.0,
+        duration: 15, input: sensor, output: element
+    end
+
+    it 'pulses the element' do
+      @step.output.should_receive(:pulse)
+      @step.step_iteration
+    end
+
+    it 'calculates the power level and adjusts the heating element' do
+      @step.pid.stub(:control) { 3000 }
+      @step.step_iteration
+      @step.output.pulse_width.should == 3000
+    end
+
+    it 'reads from the sensor and logs to last_reading' do
+      @step.input.stub(:read) { 125.0 }
+      @step.step_iteration
+      @step.last_reading.should == 125.0
+    end
+
+    context 'when temperature threshold is reached' do
+      before do
+        @step.input.stub(:read) { 156.0 }
+        @step.step_iteration
+      end
+
+      it 'sets the threshold as true' do
+        @step.threshold_reached.should be_true
+      end
+
+      it 'maintains threshold_reached even when temp drops below threshold' do
+        @step.input.stub(:read) { 145.0 }
+        @step.step_iteration
+        @step.threshold_reached.should be_true
+      end
+
+      it 'starts the clock on time remaining' do
+        (@step.time_remaining > 0).should be_true
+        (@step.time_remaining <= @step.duration_in_seconds).should be_true
+      end
+
+      it 'stops the step when temperature has hit target for duration' do
+        @step.instance_variable_set(:@step_finishes_at, Time.now.to_i - 10)
+        @step.step_iteration
+        @step.should be_ended
+      end
+    end
+  end
 end

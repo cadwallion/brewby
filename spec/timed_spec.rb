@@ -37,7 +37,7 @@ describe Brewby::Timed do
 
   context 'started' do
     before do
-      @step.start!
+      @step.start_timer
     end
 
     it 'is started' do
@@ -60,8 +60,8 @@ describe Brewby::Timed do
 
   context 'ended' do
     before do
-      @step.start!
-      @step.stop!
+      @step.start_timer
+      @step.stop_timer
     end
 
     it 'is started' do

@@ -7,6 +7,7 @@ module Brewby
       @on = false
       @pulse_range_end = (Time.now.to_i * 1000) + @pulse_range
       @adapter = adapter
+      @pulse_width = 0
     end
 
     def pulse
