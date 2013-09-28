@@ -61,7 +61,7 @@ module Brewby
       end
 
       def start
-        start!
+        start_timer
         while in_progress? do
           step_iteration
         end

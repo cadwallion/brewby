@@ -14,11 +14,11 @@ module Brewby
       started? && !ended?
     end
 
-    def start!
+    def start_timer
       @start_time = Time.now
     end
 
-    def stop!
+    def stop_timer
       @end_time = Time.now
     end
 
