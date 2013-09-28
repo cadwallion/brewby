@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+$: << 'lib'
+require 'bundler/setup'
+require 'brewby'
+
+output = {
+  pin: 17,
+  pulse_range: 5000
+}
+
+application = Brewby::Application.new adapter: :test, inputs: [{}, {}, {}], outputs: [output]
+application.add_step :temp_control, mode: :auto, target: 155.0, duration: 15
+application.start

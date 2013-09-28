@@ -65,7 +65,7 @@ module Brewby
 
     def start
       @steps.each do |step|
-        @step.start
+        step.start
       end
     end
   end
