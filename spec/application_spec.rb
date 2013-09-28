@@ -36,4 +36,26 @@ describe Brewby::Application do
       @application.output_adapter_class.should == Brewby::Adapters::RaspberryPi::Output
     end
   end
+
+  context 'adding steps' do
+    before do
+      @application.add_step :temp_control, mode: :auto, mode: :auto, target: 155.0, duration: 15
+      @step = @application.steps.first
+    end
+
+    it 'creates a step object with passed configuration options' do
+      @step.should be_instance_of Brewby::Steps::TempControl
+    end
+
+    it 'passes an input and an output to the step' do
+      @step.input.should == @application.inputs.first
+      @step.output.should == @application.outputs.first
+    end
+
+    it 'allows the step to specify the input/output objects to use' do
+      @application.add_step :temp_control, mode: :auto, mode: :auto, target: 155.0, duration: 15, input: @application.inputs.last
+      @step = @application.steps.last
+      @step.input.should == @application.inputs.last
+    end
+  end
 end

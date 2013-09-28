@@ -17,10 +17,6 @@ module Brewby
       configure_outputs
     end
 
-    def add_step step
-      @steps << step
-    end
-
     def configure_inputs
       @inputs = []
 
@@ -56,6 +52,15 @@ module Brewby
       else
         Brewby::Adapters::RaspberryPi::Output
       end
+    end
+
+    def add_step step_type, options = {}
+      case step_type
+      when :temp_control
+        default_options = { input: @inputs.first, output: @outputs.first }
+        step = Brewby::Steps::TempControl.new default_options.merge(options)
+      end
+      @steps.push step
     end
 
     def start
