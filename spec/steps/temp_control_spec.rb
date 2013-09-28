@@ -107,5 +107,27 @@ describe Brewby::Steps::TempControl do
       @step.step_iteration
       @step.last_reading.should == 125.0
     end
+
+    context 'when temperature threshold is reached' do
+      before do
+        @step.input.stub(:read) { 156.0 }
+        @step.step_iteration
+      end
+
+      it 'sets the threshold as true' do
+        @step.threshold_reached.should be_true
+      end
+
+      it 'maintains threshold_reached even when temp drops below threshold' do
+        @step.input.stub(:read) { 145.0 }
+        @step.step_iteration
+        @step.threshold_reached.should be_true
+      end
+
+      it 'starts the clock on time remaining' do
+        (@step.time_remaining > 0).should be_true
+        (@step.time_remaining <= @step.duration_in_seconds).should be_true
+      end
+    end
   end
 end
