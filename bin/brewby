@@ -8,6 +8,11 @@ output = {
   pulse_range: 5000
 }
 
+Signal.trap(:INT) do
+  puts "Shutting down"
+  exit
+end
+
 application = Brewby::Application.new adapter: :test, inputs: [{}, {}, {}], outputs: [output]
 application.add_step :temp_control, mode: :auto, target: 155.0, duration: 15
 application.start
