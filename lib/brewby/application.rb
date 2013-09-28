@@ -65,7 +65,19 @@ module Brewby
 
     def start
       @steps.each do |step|
-        step.start
+        step.start_timer
+        while step.in_progress? do
+          step.step_iteration
+          puts "Temp: #{step.last_reading} Output: #{step.power_level}"
+          if step.threshold_reached
+            if step.time_remaining > 60
+              puts "Time Remaining: #{step.time_remaining / 60} minutes"
+            else
+              puts "Time Remaining: #{step.time_remaining} seconds"
+            end
+          end
+          sleep 1
+        end
       end
     end
   end

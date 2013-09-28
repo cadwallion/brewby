@@ -63,13 +63,6 @@ module Brewby
         output.pulse_width
       end
 
-      def start
-        start_timer
-        while in_progress? do
-          step_iteration
-        end
-      end
-
       def step_iteration
         calculate_power_level
         output.pulse
