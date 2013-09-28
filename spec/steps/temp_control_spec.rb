@@ -128,6 +128,12 @@ describe Brewby::Steps::TempControl do
         (@step.time_remaining > 0).should be_true
         (@step.time_remaining <= @step.duration_in_seconds).should be_true
       end
+
+      it 'stops the step when temperature has hit target for duration' do
+        @step.instance_variable_set(:@step_finishes_at, Time.now.to_i - 10)
+        @step.step_iteration
+        @step.should be_ended
+      end
     end
   end
 end
