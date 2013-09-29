@@ -21,6 +21,8 @@ module Brewby
 
         if automatic_control?
           configure_automatic_control options
+        else
+          set_power_level options[:power_level] || 1.0
         end
       end
 
@@ -46,7 +48,7 @@ module Brewby
       end
 
       def set_power_level level
-        set_pulse_width (level * @pulse_range)
+        set_pulse_width (level * @pulse_range).to_i
       end
 
       def calculate_power_level
@@ -64,10 +66,15 @@ module Brewby
       end
 
       def step_iteration
-        calculate_power_level
-        output.pulse
-        check_temp_threshold unless threshold_reached
-        check_step_completion
+        if automatic_control?
+          calculate_power_level
+          output.pulse
+          check_temp_threshold unless threshold_reached
+          check_step_completion
+        else
+          read_input if input
+          output.pulse
+        end
       end
 
       def check_step_completion
