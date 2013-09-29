@@ -13,6 +13,8 @@ Signal.trap(:INT) do
   exit
 end
 
-application = Brewby::Application.new adapter: :test, inputs: [{}, {}, {}], outputs: [output]
+adapter = ARGV[0] || :raspberry_pi
+
+application = Brewby::Application.new adapter: adapter.to_sym, inputs: [{}, {}, {}], outputs: [output]
 application.add_step :temp_control, mode: :auto, target: 155.0, duration: 15
 application.start
