@@ -1,20 +1,39 @@
 #!/usr/bin/env ruby
 $: << 'lib'
 require 'bundler/setup'
+require 'thor'
 require 'brewby'
+require 'json'
 
-output = {
-  pin: 17,
-  pulse_range: 5000
-}
+module Brewby
+  class CLI < Thor
+    desc "start", "start Brewby"
+    method_option :config, default: '~/.brewbyrc', aliases: '-c', desc: 'Brewby configuration file'
+    method_option :adapter, default: 'raspberry_pi', desc: 'Brewby IO adapters to use'
+    def start
+      Signal.trap(:INT) do
+        puts "Shutting down"
+        exit
+      end
 
-Signal.trap(:INT) do
-  puts "Shutting down"
-  exit
+      if File.exists? File.expand_path(options[:config])
+        config = JSON.load File.read File.expand_path(options[:config])
+      else
+        config = {
+          adapter: options[:adapter].to_sym,
+          inputs: [{}],
+          outputs: [{
+            pin: 17,
+            pulse_range: 5000
+          }]
+        }
+      end
+
+      application = Brewby::Application.new config
+      application.add_step :temp_control, mode: :auto, target: 155.0, duration: 15
+      application.start
+    end
+  end
 end
 
-adapter = ARGV[0] || :raspberry_pi
-
-application = Brewby::Application.new adapter: adapter.to_sym, inputs: [{}, {}, {}], outputs: [output]
-application.add_step :temp_control, mode: :auto, target: 155.0, duration: 15
-application.start
+Brewby::CLI.start

@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'thor'
+
 group :development do
   gem 'temper-control'
   gem 'frappuccino'

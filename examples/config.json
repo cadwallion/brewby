@@ -1,0 +1,21 @@
+{
+  "adapter":"raspberry_pi",
+  "inputs":[
+    {
+      "hardware_id":"28-something"
+    },
+    {
+      "hardware_id":"28-somethingelse"
+    }
+  ],
+  "outputs":[
+    {
+      "pulse_range":5000,
+      "pin":17
+    },
+    {
+      "pulse_range":5000,
+      "pin":19
+    }
+  ]
+}
