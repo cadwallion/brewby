@@ -2,8 +2,10 @@ module Brewby
   module Adapters
     module RaspberryPi
       class DS18B20
+        attr_accessor :name
         def initialize options = {}
           @hardware_id = options[:hardware_id] || find_hardware_id
+          @name = options[:name]
         end
 
         def find_hardware_id

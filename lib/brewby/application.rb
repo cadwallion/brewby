@@ -31,7 +31,7 @@ module Brewby
       
       @options[:outputs].each do |output_options|
         adapter = output_adapter_class.new output_options
-        element = Brewby::HeatingElement.new adapter, pulse_range: output_options[:pulse_range]
+        element = Brewby::HeatingElement.new adapter, pulse_range: output_options[:pulse_range], name: output_options[:name]
         @outputs.push element
       end
     end

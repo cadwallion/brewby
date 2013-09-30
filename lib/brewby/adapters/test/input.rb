@@ -2,8 +2,9 @@ module Brewby
   module Adapters
     module Test
       class Input
+        attr_accessor :name
         def initialize options = {}
-          # nope
+          @name = options[:name]
         end
 
         def read

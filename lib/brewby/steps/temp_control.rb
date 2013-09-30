@@ -6,7 +6,7 @@ require 'temper'
 module Brewby
   module Steps
     class TempControl
-      attr_reader :input, :output, :pid, :target, :duration, :mode, :last_reading, :threshold_reached
+      attr_reader :input, :output, :pid, :target, :duration, :mode, :last_reading, :threshold_reached, :name
 
       include Brewby::Timed
 
@@ -18,6 +18,7 @@ module Brewby
         @input = options[:input]
         @output = options[:output]
         @threshold_reached = false
+        @name = options[:name]
 
         if automatic_control?
           configure_automatic_control options
