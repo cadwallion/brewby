@@ -70,6 +70,7 @@ module Brewby
     def start
       puts "Starting Recipe '#{@name}'" if @name
       @steps.each do |step|
+        puts "Beginning Step #{step.name}" if step.name
         step.start_timer
         while step.in_progress? do
           step.step_iteration
