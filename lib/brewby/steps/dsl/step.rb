@@ -2,17 +2,19 @@ module Brewby
   module Steps
     module DSL
       class Step
+        attr_reader :step_class, :options
         def initialize name, application
           @application = application
           @options = {}
           @options[:name] = name
         end
 
-        def type symbol
+        def type symbol, options = {}
           @step_class = case symbol
           when :temp_control
             Brewby::Steps::TempControl
           end
+          @options.merge!(options)
         end
 
         def mode m

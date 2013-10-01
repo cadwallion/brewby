@@ -9,10 +9,7 @@ recipe 'Honey Ale' do
   end
 
   step 'Infusion Mash Step' do
-    type :temp_control
-    mode :auto
-    target 150.0
-    hold_duration 60
+    type :temp_control, mode: :auto, target: 150.0, duration: 60
     input :mlt
     output :hlt
   end
