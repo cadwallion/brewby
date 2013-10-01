@@ -4,12 +4,14 @@ require 'bundler/setup'
 require 'thor'
 require 'brewby'
 require 'json'
+require 'pry'
 
 module Brewby
   class CLI < Thor
     desc "start", "start Brewby"
     method_option :config, default: '~/.brewbyrc', aliases: '-c', desc: 'Brewby configuration file'
     method_option :adapter, default: 'raspberry_pi', desc: 'Brewby IO adapters to use'
+    method_option :recipe, desc: 'Brewby recipe file to load'
     def start
       Signal.trap(:INT) do
         puts "Shutting down"
@@ -17,7 +19,7 @@ module Brewby
       end
 
       if File.exists? File.expand_path(options[:config])
-        config = JSON.load File.read File.expand_path(options[:config])
+        config = JSON.parse File.read(File.expand_path(options[:config])), symbolize_names: true
       else
         config = {
           adapter: options[:adapter].to_sym,
@@ -30,7 +32,13 @@ module Brewby
       end
 
       application = Brewby::Application.new config
-      application.add_step :temp_control, mode: :auto, target: 155.0, duration: 15
+
+      if options[:recipe]
+        application.load_recipe options[:recipe]
+      else
+        application.add_step :temp_control, mode: :manual, power_level: 1.0
+      end
+
       application.start
     end
   end

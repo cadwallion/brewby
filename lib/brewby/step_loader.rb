@@ -9,6 +9,7 @@ module Brewby
     end
 
     def recipe name, &block
+      @application.name = name
       yield self
     end
 
