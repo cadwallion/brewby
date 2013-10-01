@@ -11,7 +11,9 @@ module Brewby
         end
 
         def initialize_gpio_pin
-          File.write File.join(GPIO_PATH, "export"), @output_pin
+          unless File.exists? File.join(GPIO_PATH, "gpio#{@output_pin}", "value")
+            File.write File.join(GPIO_PATH, "export"), @output_pin
+          end
         end
 
         def initialize_gpio_direction
