@@ -38,8 +38,8 @@ module Brewby
         end
 
         def create!
-          @options[:input] = @application.inputs.find { |i| i.name }
-          @options[:output] = @application.outputs.find { |o| o.name }
+          @options[:input] = @application.inputs.find { |i| i.name.to_sym == @options[:input] }
+          @options[:output] = @application.outputs.find { |o| o.name.to_sym == @options[:output] }
           @step_class.new @options
         end
       end

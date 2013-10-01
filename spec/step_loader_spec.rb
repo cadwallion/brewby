@@ -8,9 +8,9 @@ describe Brewby::StepLoader do
     @loader = Brewby::StepLoader.new @application
   end
 
+
   it 'reads a Brewby process file' do
     @loader.load_file File.join(File.dirname(__FILE__), 'support', 'sample_recipe.rb')
     @application.should have(4).steps
-    @application.steps[0].name.should == 'Strike Water'
   end
 end

@@ -1,28 +1,20 @@
 require 'spec_helper'
 
-class FakeApp
-  attr_accessor :steps
-
-  def inputs
-    [
-      { name: :bk },
-      { name: :hlt },
-      { name: :mlt }
-    ]
-  end
-
-  def outputs
-    [
-      { name: :bk },
-      { name: :hlt },
-      { name: :mlt }
-    ]
-  end
-end
-
 describe Brewby::Steps::DSL::Step do
   before do
-    @application = FakeApp.new
+    @outputs = [
+      { name: :hlt, pin: 3 },
+      { name: :mlt, pin: 2 },
+      { name: :bk, pin: 1 }
+    ]
+
+    @inputs = [
+      { name: :bk },
+      { name: :mlt },
+      { name: :hlt }
+    ]
+
+    @application = Brewby::Application.new adapter: :test, outputs: @outputs, inputs: @inputs
     @step = Brewby::Steps::DSL::Step.new 'Test Step', @application
   end
 
@@ -46,5 +38,22 @@ describe Brewby::Steps::DSL::Step do
   it 'accepts a target' do
     @step.target 155.0
     @step.options[:target].should == 155.0
+  end
+
+  context 'creation' do
+    before do
+      @step.type :temp_control, mode: :manual, power_level: 1.0
+      @step.input :mlt
+      @step.output :bk
+      @created_step = @step.create!
+    end
+
+    it 'should translate the input correctly' do
+      @created_step.input.name.should == :mlt
+    end
+
+    it 'should translate the output correctly' do
+      @created_step.output.name.should == :bk
+    end
   end
 end
