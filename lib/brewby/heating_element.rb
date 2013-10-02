@@ -27,7 +27,7 @@ module Brewby
     end
 
     def pulse_within_width?
-      @pulse_time < pulse_end
+      @pulse_time <= pulse_end
     end
 
     def pulse_exceeds_range?
