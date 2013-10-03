@@ -45,7 +45,8 @@ module Brewby
       end
 
       def read_input
-        @last_reading = input.read
+        reading = input.read
+        @last_reading = reading if reading
       end
 
       def set_power_level level
