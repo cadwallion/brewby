@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'thor'
-gem 'brewscribe'
 
 group :development do
   gem 'temper-control'
