@@ -2,22 +2,35 @@ module Brewby
   module Adapters
     module RaspberryPi
       class DS18B20
-        attr_accessor :name
+        attr_accessor :name, :hardware_id, :device_path
         def initialize options = {}
-          @hardware_id = options[:hardware_id] || find_hardware_id
           @name = options[:name]
+          @device_path = options[:device_path] || "/sys/bus/w1/devices"
+          @hardware_id = options[:hardware_id] || find_hardware_id
         end
 
         def find_hardware_id
-          Dir['/sys/bus/w1/devices/28*'][0].gsub('/sys/bus/w1/devices/','')
+          w1_devices[0].gsub("#{device_path}/",'')
+        end
+
+        def w1_devices
+          Dir["#{device_path}/28*"]
         end
 
         def read
           raw = read_raw
-          tempC = raw.match(/t=([0-9]+)/)[1].to_i / 1000
-          tempF = ((tempC * 1.8) + 32).round(3)
+          tempC = parse raw
+          tempF = to_fahrenheit tempC
 
           tempF
+        end
+
+        def parse raw_data
+          raw_data.match(/t=([0-9]+)/)[1].to_f / 1000
+        end
+
+        def to_fahrenheit temp
+          ((temp * 1.8) + 32).round(3)
         end
 
         def read_raw
