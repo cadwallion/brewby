@@ -29,5 +29,11 @@ describe Brewby::Adapters::RaspberryPi::DS18B20 do
       tempC = @sensor.parse @sensor.read_raw
       tempC.should == 15.312
     end
+
+    it 'returns nil when an error occurs when parsing' do
+      Brewby::Adapters::RaspberryPi::DS18B20.any_instance.stub(:read_raw) { "f5 00 4b 46 7f ff 0b 10 d7 : crc=d7 NO\nf5 00 4b 46 7f ff 0b 10 d7" }
+      input = @sensor.read
+      input.should be_nil
+    end
   end
 end

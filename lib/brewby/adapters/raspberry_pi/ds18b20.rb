@@ -19,14 +19,20 @@ module Brewby
 
         def read
           raw = read_raw
-          tempC = parse raw
-          tempF = to_fahrenheit tempC
 
-          tempF
+          if tempC = parse(raw)
+            tempF = to_fahrenheit tempC
+          else
+            tempC
+          end
         end
 
         def parse raw_data
-          raw_data.match(/t=([0-9]+)/)[1].to_f / 1000
+          if temp_data = raw_data.match(/t=([0-9]+)/)
+            temp_data[1].to_f / 1000
+          else
+            nil
+          end
         end
 
         def to_fahrenheit temp
