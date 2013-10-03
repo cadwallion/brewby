@@ -2,22 +2,23 @@ module Brewby
   module Adapters
     module RaspberryPi
       class Output
-        GPIO_PATH = "/sys/class/gpio"
-
+        attr_reader :gpio_path, :pin
         def initialize options = {}
-          @output_pin = options[:pin]
+          @pin = options[:pin]
+          @gpio_path = options[:gpio_path] || '/sys/class/gpio'
+
           initialize_gpio_pin
           initialize_gpio_direction
         end
 
         def initialize_gpio_pin
-          unless File.exists? File.join(GPIO_PATH, "gpio#{@output_pin}", "value")
-            File.write File.join(GPIO_PATH, "export"), @output_pin
+          unless File.exists? File.join(gpio_path, "gpio#{pin}", "value")
+            File.write File.join(gpio_path, "export"), pin
           end
         end
 
         def initialize_gpio_direction
-          File.write File.join(GPIO_PATH, "gpio#{@output_pin}", "direction"), 'out'
+          File.write File.join(gpio_path, "gpio#{pin}", "direction"), 'out'
         end
 
         def on
@@ -29,11 +30,11 @@ module Brewby
         end
 
         def on?
-          '1' == File.read(File.join(GPIO_PATH, "gpio#{@output_pin}", "value"))
+          '1' == File.read(File.join(gpio_path, "gpio#{pin}", "value"))
         end
 
         def write value
-          File.write File.join(GPIO_PATH, "gpio#{@output_pin}", "value"), value
+          File.write File.join(gpio_path, "gpio#{pin}", "value"), value
         end
       end
     end
