@@ -14,6 +14,7 @@ describe Brewby::Application do
   it 'should have one output' do
     @application.outputs.size.should == 1
     @application.outputs.first.should be_instance_of Brewby::HeatingElement
+    @application.outputs.first.adapter.should be_instance_of Brewby::Outputs::Test
   end
 
   it 'should have two inputs' do

@@ -1,6 +1,6 @@
 module Brewby
   class HeatingElement
-    attr_accessor :pulse_width, :pulse_range, :name
+    attr_accessor :pulse_width, :pulse_range, :name, :adapter
 
     def initialize adapter, options = {}
       @pulse_range = options[:pulse_range] || 1000
