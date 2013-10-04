@@ -6,7 +6,7 @@ describe Brewby::HeatingElement do
   end
 
   before do
-    adapter = Brewby::Adapters::Test::Output.new
+    adapter = Brewby::Outputs::Test.new
     @element = Brewby::HeatingElement.new(adapter, pulse_range: 5000)
     @element.pulse_width = 3000
   end

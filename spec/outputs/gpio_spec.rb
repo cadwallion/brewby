@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Brewby::Adapters::RaspberryPi::Output do
+describe Brewby::Outputs::GPIO do
   before do
     @gpio_dir = Dir.mktmpdir
     Dir.mkdir "#{@gpio_dir}/gpio1"
@@ -14,20 +14,20 @@ describe Brewby::Adapters::RaspberryPi::Output do
 
   context 'GPIO initialization' do
     it 'initializes the GPIO pin via export' do
-      Brewby::Adapters::RaspberryPi::Output.new pin: 1, gpio_path: @gpio_dir
+      Brewby::Outputs::GPIO.new pin: 1, gpio_path: @gpio_dir
       data = File.read "#{@gpio_dir}/export"
       data.should == '1'
     end
 
     it 'initializes the GPIO pin direction' do
-      Brewby::Adapters::RaspberryPi::Output.new pin: 1, gpio_path: @gpio_dir
+      Brewby::Outputs::GPIO.new pin: 1, gpio_path: @gpio_dir
       data = File.read "#{@gpio_dir}/gpio1/direction"
       data.should == 'out'
     end
 
     it 'does not initialize the GPIO pin if already initialized' do
       File.write "#{@gpio_dir}/gpio1/value", ""
-      Brewby::Adapters::RaspberryPi::Output.new pin: 1, gpio_path: @gpio_dir
+      Brewby::Outputs::GPIO.new pin: 1, gpio_path: @gpio_dir
       data = File.read "#{@gpio_dir}/export"
       data.should == ''
     end
@@ -35,7 +35,7 @@ describe Brewby::Adapters::RaspberryPi::Output do
 
   context 'output' do
     before do
-      @output = Brewby::Adapters::RaspberryPi::Output.new pin: 1, gpio_path: @gpio_dir
+      @output = Brewby::Outputs::GPIO.new pin: 1, gpio_path: @gpio_dir
       File.write "#{@gpio_dir}/gpio1/value", ""
     end
 

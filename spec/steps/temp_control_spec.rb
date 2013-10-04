@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Brewby::Steps::TempControl do
   let(:sensor) { Brewby::TempSensor.new 1 }
-  let(:adapter) { Brewby::Adapters::Test::Output.new }
+  let(:adapter) { Brewby::Outputs::Test.new }
   let(:element) { Brewby::HeatingElement.new adapter, pulse_width: 5000 }
   let(:step) { Brewby::Steps::TempControl.new mode: :manual, input: sensor, output: element }
 

@@ -1,8 +1,8 @@
-require 'brewby/adapters/raspberry_pi/output'
-require 'brewby/adapters/raspberry_pi/ds18b20'
+require 'brewby/inputs/ds18b20'
+require 'brewby/inputs/test'
 
-require 'brewby/adapters/test/output'
-require 'brewby/adapters/test/input'
+require 'brewby/outputs/test'
+require 'brewby/outputs/gpio'
 
 module Brewby
   class Application
@@ -39,18 +39,18 @@ module Brewby
     def input_adapter_class
       case adapter
       when :test
-        Brewby::Adapters::Test::Input
+        Brewby::Inputs::Test
       else
-        Brewby::Adapters::RaspberryPi::DS18B20
+        Brewby::Inputs::DS18B20
       end
     end
 
     def output_adapter_class
       case adapter
       when :test
-        Brewby::Adapters::Test::Output
+        Brewby::Outputs::Test
       else
-        Brewby::Adapters::RaspberryPi::Output
+        Brewby::Outputs::GPIO
       end
     end
 

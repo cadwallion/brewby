@@ -19,21 +19,21 @@ describe Brewby::Application do
   it 'should have two inputs' do
     @application.inputs.size.should == 2
     @application.inputs.each do |input|
-      input.should be_instance_of Brewby::Adapters::Test::Input
+      input.should be_instance_of Brewby::Inputs::Test
     end
   end
 
   context 'adapters' do
     it 'determines the input adapter class based on application adapter' do
-      @application.input_adapter_class.should == Brewby::Adapters::Test::Input
+      @application.input_adapter_class.should == Brewby::Inputs::Test
       @application.adapter = :raspberry_pi
-      @application.input_adapter_class.should == Brewby::Adapters::RaspberryPi::DS18B20
+      @application.input_adapter_class.should == Brewby::Inputs::DS18B20
     end
 
     it 'determines the output adapter class based on application adapter' do
-      @application.output_adapter_class.should == Brewby::Adapters::Test::Output
+      @application.output_adapter_class.should == Brewby::Outputs::Test
       @application.adapter = :raspberry_pi
-      @application.output_adapter_class.should == Brewby::Adapters::RaspberryPi::Output
+      @application.output_adapter_class.should == Brewby::Outputs::GPIO
     end
   end
 
