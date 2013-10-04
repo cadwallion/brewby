@@ -63,14 +63,23 @@ module Brewby
       @steps.each do |step|
         @current_step = step
         step.start_timer
-        while step.in_progress? do
-          view.flushinp
+        loop do 
           step.step_iteration
           render()
+          break unless step.in_progress?
+          exit if pressed?('q')
         end
       end
     ensure
       view.clear if view
+    end
+
+    def pressed? key
+      if view
+        (char = view.getch) == key[0].ord
+      else
+        false
+      end
     end
 
     def render
