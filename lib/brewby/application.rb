@@ -1,8 +1,5 @@
-require 'brewby/inputs/ds18b20'
-require 'brewby/inputs/test'
-
-require 'brewby/outputs/test'
-require 'brewby/outputs/gpio'
+require 'brewby/inputs'
+require 'brewby/outputs'
 
 module Brewby
   class Application
@@ -21,7 +18,7 @@ module Brewby
       @inputs = []
 
       @options[:inputs].each do |input_options|
-        sensor = input_adapter_class.new input_options
+        sensor = Brewby::Inputs.adapter_class(@adapter).new input_options
         @inputs.push sensor
       end
     end
@@ -30,27 +27,9 @@ module Brewby
       @outputs = []
       
       @options[:outputs].each do |output_options|
-        adapter = output_adapter_class.new output_options
-        element = Brewby::HeatingElement.new adapter, pulse_range: output_options[:pulse_range], name: output_options[:name]
+        output_adapter = Brewby::Outputs.adapter_class(@adapter).new output_options
+        element = Brewby::HeatingElement.new output_adapter, pulse_range: output_options[:pulse_range], name: output_options[:name]
         @outputs.push element
-      end
-    end
-
-    def input_adapter_class
-      case adapter
-      when :test
-        Brewby::Inputs::Test
-      else
-        Brewby::Inputs::DS18B20
-      end
-    end
-
-    def output_adapter_class
-      case adapter
-      when :test
-        Brewby::Outputs::Test
-      else
-        Brewby::Outputs::GPIO
       end
     end
 

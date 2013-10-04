@@ -23,20 +23,6 @@ describe Brewby::Application do
     end
   end
 
-  context 'adapters' do
-    it 'determines the input adapter class based on application adapter' do
-      @application.input_adapter_class.should == Brewby::Inputs::Test
-      @application.adapter = :raspberry_pi
-      @application.input_adapter_class.should == Brewby::Inputs::DS18B20
-    end
-
-    it 'determines the output adapter class based on application adapter' do
-      @application.output_adapter_class.should == Brewby::Outputs::Test
-      @application.adapter = :raspberry_pi
-      @application.output_adapter_class.should == Brewby::Outputs::GPIO
-    end
-  end
-
   context 'adding steps' do
     before do
       @application.add_step :temp_control, mode: :auto, mode: :auto, target: 155.0, duration: 15
