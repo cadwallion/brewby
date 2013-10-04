@@ -25,5 +25,14 @@ module Brewby
     def elapsed
       started? ? (@end_time || Time.now) - @start_time :  0
     end
+
+    def timer_for seconds
+      hours = seconds / 3600
+      seconds -= (hours * 3600)
+      minutes = seconds / 60
+      seconds -= minutes * 60
+
+      "%0.2d:%0.2d:%0.2d" % [hours, minutes,seconds]
+    end
   end
 end

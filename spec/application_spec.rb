@@ -7,7 +7,8 @@ describe Brewby::Application do
       pulse_range: 5000
     }
 
-
+    Brewby::Application.any_instance.stub(:render)
+    Brewby::Application.any_instance.stub(:configure_view)
     @application = Brewby::Application.new adapter: :test, outputs: [@output], inputs: [{}, {hardware_id: '28-ba1c9d2e48'}]
   end
   

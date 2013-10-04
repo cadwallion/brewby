@@ -1,10 +1,13 @@
 require 'brewby/inputs'
 require 'brewby/outputs'
+require 'brewby/view'
 
 module Brewby
   class Application
-    attr_reader :outputs, :inputs, :steps
+    attr_reader :outputs, :inputs, :steps, :view
     attr_accessor :adapter, :name
+
+    include Brewby::Timed
 
     def initialize options = {}
       @options = options
@@ -12,6 +15,7 @@ module Brewby
       @adapter = options[:adapter].to_sym
       configure_inputs
       configure_outputs
+      configure_view
     end
 
     def configure_inputs
@@ -33,6 +37,10 @@ module Brewby
       end
     end
 
+    def configure_view
+      @view = Brewby::View.new
+    end
+
     def add_step step_type, options = {}
       case step_type
       when :temp_control
@@ -46,39 +54,34 @@ module Brewby
       Brewby::StepLoader.new(self).load_file file
     end
 
+    def KEY ch
+      ch[0].ord
+    end
+
     def start
-      puts "Starting Recipe '#{@name}'" if @name
+      start_timer
       @steps.each do |step|
-        puts "Beginning Step #{step.name}" if step.name
+        @current_step = step
         step.start_timer
         while step.in_progress? do
+          view.flushinp
           step.step_iteration
-          puts "Temp: #{step.last_reading} Output: #{step.power_level}"
-          if step.threshold_reached
-            if step.time_remaining > 60
-              puts "Time Remaining: #{step.time_remaining / 60} minutes"
-            else
-              puts "Time Remaining: #{step.time_remaining} seconds"
-            end
-          end
-          sleep 1
-        end
-
-        input = ''
-        while input != 'y'
-          puts "Continue (y/N): "
-          input = gets.chomp
-
-          case input
-          when 'N'
-            break
-          when 'y'
-            puts "Proceeding to next step..."
-          else
-            puts "Invalid response."
-          end
+          render()
         end
       end
+    ensure
+      view.clear if view
+    end
+
+    def render
+      view.move 1, 0
+      view.addstr "BREWBY: Brewing '#{@name}'" if @name
+      view.move 2, 0
+      view.addstr "Step #{@steps.index(@current_step)}/#{@steps.size}: "
+      view.move 16, 0
+      view.addstr "Brew Timer: #{timer_for(elapsed.to_i)}"
+      view.refresh
+      @current_step.render(view)
     end
   end
 end

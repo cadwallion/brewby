@@ -103,6 +103,24 @@ module Brewby
       def duration_in_seconds
         @duration * 60
       end
+
+      def render(view)
+        view.move 2, 10
+        view.addstr @name
+
+        view.move 4, 0
+        view.addstr "Temperature: #{@last_reading}"
+        view.move 5, 0
+        view.addstr "Power Level: #{power_level}"
+        view.move 16, 50
+        view.addstr "Step Timer: #{timer_for(elapsed.to_i)}"
+        view.refresh
+
+        if threshold_reached
+          view.move 6, 0
+          view.addstr "Time Remaining: #{timer_for(time_remaining)}"
+        end
+      end
     end
   end
 end
