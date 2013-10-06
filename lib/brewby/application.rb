@@ -54,10 +54,6 @@ module Brewby
       Brewby::StepLoader.new(self).load_file file
     end
 
-    def KEY ch
-      ch[0].ord
-    end
-
     def start
       start_timer
       @steps.each do |step|
@@ -65,9 +61,9 @@ module Brewby
         step.start_timer
         loop do 
           step.step_iteration
-          render()
+          render
+          handle_input
           break unless step.in_progress?
-          exit if pressed?('q')
         end
       end
     ensure
@@ -80,6 +76,10 @@ module Brewby
       else
         false
       end
+    end
+
+    def handle_input
+      exit if pressed? 'q'
     end
 
     def render
