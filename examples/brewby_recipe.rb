@@ -23,7 +23,7 @@ recipe 'Honey Ale' do
     target 168.0
     hold_duration 45
     input :hlt
-    output :mlt
+    output :hlt
   end
 
   step 'Boil' do

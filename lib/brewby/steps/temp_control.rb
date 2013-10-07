@@ -64,7 +64,7 @@ module Brewby
       end
 
       def power_level
-        output.pulse_width
+        output.pulse_width / @pulse_range.to_f
       end
 
       def step_iteration
@@ -106,12 +106,16 @@ module Brewby
 
       def render(view)
         view.move 2, 10
-        view.addstr @name
+        if @name
+          view.addstr @name.ljust(70)
+        else
+          view.addstr "#{mode.capitalize} Temp Control".ljust(70)
+        end
 
         view.move 4, 0
-        view.addstr "Temperature: #{@last_reading}"
+        view.addstr "Temperature: #{@last_reading} F"
         view.move 5, 0
-        view.addstr "Power Level: #{power_level}"
+        view.addstr "Power Level: #{power_level * 100.0}%".ljust(70)
         view.move 16, 50
         view.addstr "Step Timer: #{timer_for(elapsed.to_i)}"
         view.refresh
@@ -119,6 +123,21 @@ module Brewby
         if threshold_reached
           view.move 6, 0
           view.addstr "Time Remaining: #{timer_for(time_remaining)}"
+        end
+      end
+
+      def handle_input key
+        case key
+        when 'e'.ord
+          if @mode == :manual
+            new_pct = [(power_level + 0.05), 1.0].min
+            set_power_level new_pct
+          end
+        when 'c'.ord
+          if @mode == :manual
+            new_pct = [(power_level - 0.05), 0.0].max
+            set_power_level new_pct
+          end
         end
       end
     end

@@ -48,7 +48,7 @@ describe Brewby::Steps::TempControl do
 
     it 'calculates the output level based on PID levels' do
       @step.calculate_power_level
-      @step.power_level.should == 5000
+      @step.power_level.should == 1.0
       @step.output.pulse_width.should == 5000
     end
   end
@@ -71,13 +71,13 @@ describe Brewby::Steps::TempControl do
     end
 
     it 'sets the power level' do
-      @step.power_level.should == 4250
+      @step.power_level.should == 0.85
       @step.output.pulse_width.should == 4250
     end
 
     it 'can have the power level set manually' do
       @step.set_power_level 0.75
-      @step.power_level.should == 3750
+      @step.power_level.should == 0.75
       @step.output.pulse_width.should == 3750
     end
   end
@@ -164,6 +164,34 @@ describe Brewby::Steps::TempControl do
           @step.step_iteration
           @step.should be_ended
         end
+      end
+    end
+
+    describe 'rendering' do
+      let(:view) { Brewby::VirtualView.new }
+      before do
+        step.instance_variable_set(:@last_reading, 100.0)
+        step.render(view)
+      end
+
+      it 'renders the default name of the step' do
+        line = view.readline(2).strip
+        line.should == "Manual Temp Control"
+      end
+
+      it 'renders the temperature' do
+        line = view.readline(4).strip
+        line.should == "Temperature: 100.0 F"
+      end
+
+      it 'renders the current power level' do
+        line = view.readline(5).strip
+        line.should == "Power Level: 100.0%"
+      end
+
+      it 'renders the step timer' do
+        line = view.readline(16).strip
+        line.should == "Step Timer: 00:00:00"
       end
     end
   end
