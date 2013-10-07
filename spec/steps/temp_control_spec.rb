@@ -194,5 +194,38 @@ describe Brewby::Steps::TempControl do
         line.should == "Step Timer: 00:00:00"
       end
     end
+
+    describe 'input handling' do
+      context 'in manual mode' do
+        it 'increases power level by 5% when e key is pressed' do
+          step.set_power_level 0.95
+          step.handle_input('e'.ord)
+          step.power_level.should == 1.0
+        end
+
+        it 'decreases power level by 5% when c key is pressed' do
+          step.set_power_level 0.85
+          step.handle_input('c'.ord)
+          step.power_level.should == 0.80
+        end
+      end
+
+      context 'in auto mode' do
+        let(:step) { Brewby::Steps::TempControl.new mode: :auto, target: 150.0, 
+          input: sensor, output: element }
+
+        it 'does nothing when e key is pressed' do
+          step.set_power_level 0.80
+          step.handle_input('e'.ord)
+          step.power_level.should == 0.80 
+        end
+
+        it 'does nothing when c key is pressed' do
+          step.set_power_level 0.80
+          step.handle_input('c'.ord)
+          step.power_level.should == 0.80
+        end
+      end
+    end
   end
 end

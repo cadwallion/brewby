@@ -130,12 +130,12 @@ module Brewby
         case key
         when 'e'.ord
           if @mode == :manual
-            new_pct = [(power_level + 0.05), 1.0].min
+            new_pct = [(power_level + 0.05).round(2), 1.0].min
             set_power_level new_pct
           end
         when 'c'.ord
           if @mode == :manual
-            new_pct = [(power_level - 0.05), 0.0].max
+            new_pct = [(power_level - 0.05).round(2), 0.0].max
             set_power_level new_pct
           end
         end
