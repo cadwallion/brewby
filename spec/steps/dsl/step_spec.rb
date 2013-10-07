@@ -16,7 +16,6 @@ describe Brewby::Steps::DSL::Step do
 
     Brewby::Application.any_instance.stub(:render)
     Brewby::Application.any_instance.stub(:configure_view)
-
     @application = Brewby::Application.new adapter: :test, outputs: @outputs, inputs: @inputs
     @step = Brewby::Steps::DSL::Step.new 'Test Step', @application
   end

@@ -93,11 +93,15 @@ module Brewby
       view.move 1, 0
       view.addstr "BREWBY: Brewing '#{@name}'" if @name
       view.move 2, 0
-      view.addstr "Step #{@steps.index(@current_step)+1}/#{@steps.size}: "
+      view.addstr "Step #{@steps.index(current_step)+1}/#{@steps.size}: "
       view.move 16, 0
       view.addstr "Brew Timer: #{timer_for(elapsed.to_i)}"
       view.refresh
-      @current_step.render(view)
+      current_step.render(view)
+    end
+
+    def current_step
+      @current_step || @steps[0]
     end
   end
 end
