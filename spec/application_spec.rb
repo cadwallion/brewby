@@ -74,4 +74,14 @@ describe Brewby::Application do
       line.should == 'Brew Timer: 00:00:00' + ''.ljust(30) + 'Step Timer: 00:00:00'
     end
   end
+
+  context 'input handling' do
+    it 'jumps to the next step when the n key is pressed' do
+      @view.stub(:getch).and_return('n'.ord)
+      @application.add_step :temp_control, mode: :auto, mode: :auto, target: 155.0, duration: 15, input: @application.inputs.last
+      @application.start_step @application.steps.first
+      @application.handle_input
+      @application.current_step.should be_ended
+    end
+  end
 end

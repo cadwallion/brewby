@@ -57,29 +57,25 @@ module Brewby
     def start
       start_timer
       @steps.each do |step|
-        @current_step = step
-        step.start_timer
-        loop do 
-          step.step_iteration
-          render
-          handle_input
-          break unless step.in_progress?
-        end
+        start_step step
+        tick while step.in_progress? 
       end
     ensure
       view.clear if view
     end
 
-    def pressed? key
-      if view
-        (char = view.getch) == key[0].ord
-      else
-        false
-      end
+    def tick
+      current_step.step_iteration
+      render
+      handle_input
+    end
+
+    def start_step step
+      @current_step = step
+      step.start_timer
     end
 
     def handle_input
-      
       if (char = view.getch) == 'q'[0].ord
         exit
       elsif char == 'n'[0].ord

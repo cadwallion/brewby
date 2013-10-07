@@ -23,5 +23,9 @@ module Brewby
     def refresh
       # no-op
     end
+
+    def getch
+      # no-op. this will get stubbed by a test
+    end
   end
 end
