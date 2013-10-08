@@ -27,13 +27,15 @@ module Brewby
     end
 
     def timer_for seconds
-      if seconds > 0
-        hours, minutes, seconds = time_from_seconds seconds
-      else
-        hours, minutes, seconds = 0, 0, 0
-      end
+      time = seconds > 0 ? time_from_seconds(seconds) : [0, 0, 0]
 
-      "%0.2d:%0.2d:%0.2d" % [hours, minutes,seconds]
+      "%0.2d:%0.2d:%0.2d" % time
+    end
+
+    def countdown_for seconds
+      sign = seconds > 0 ? "" : "+"
+
+      sign + timer_for(seconds.abs)
     end
 
     def time_from_seconds seconds
@@ -43,17 +45,6 @@ module Brewby
       seconds -= minutes * 60
 
       [hours, minutes, seconds]
-    end
-
-    def countdown_for seconds
-      if seconds < 0
-        seconds = seconds * -1
-        sign = "+"
-      else
-        sign = ""
-      end
-
-      sign + timer_for(seconds)
     end
   end
 end
