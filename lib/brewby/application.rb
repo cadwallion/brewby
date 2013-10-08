@@ -16,6 +16,7 @@ module Brewby
       configure_inputs
       configure_outputs
       configure_view
+      @ready = false
     end
 
     def configure_inputs
@@ -58,10 +59,17 @@ module Brewby
       start_timer
       @steps.each do |step|
         start_step step
-        tick while step.in_progress? 
+        until ready_for_next_step?
+          tick 
+        end
+        @ready = false
       end
     ensure
       view.clear if view
+    end
+
+    def ready_for_next_step?
+      @ready
     end
 
     def tick
@@ -80,6 +88,7 @@ module Brewby
         exit
       elsif char == 'n'[0].ord
         @current_step.stop_timer
+        @ready = true
       else
         @current_step.handle_input char
       end

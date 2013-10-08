@@ -81,4 +81,14 @@ describe Brewby::Timed do
       @step.elapsed.should == elapsed
     end
   end
+
+  context 'timer display' do
+    it 'gives a formatted string for time remaining' do
+      @step.timer_for(3750).should == "01:02:30"
+    end
+
+    it 'gives a negative counter when time is less than zero' do
+      @step.timer_for(-95).should == "-00:01:35"
+    end
+  end
 end

@@ -113,7 +113,7 @@ module Brewby
         end
 
         view.move 4, 0
-        view.addstr "Temperature: #{@last_reading} F"
+        view.addstr "Temperature: #{@last_reading} F".ljust(25)
         view.move 5, 0
         view.addstr "Power Level: #{power_level * 100.0}%".ljust(70)
         view.move 16, 50
