@@ -83,12 +83,28 @@ describe Brewby::Timed do
   end
 
   context 'timer display' do
-    it 'gives a formatted string for time remaining' do
-      @step.timer_for(3750).should == "01:02:30"
+    context 'time is greater than zero' do
+      let(:time_remaining) { 3750 }
+
+      it 'gives a formatted timer' do
+        @step.timer_for(time_remaining).should == "01:02:30"
+      end
+
+      it 'gives a formatted countdown' do
+        @step.countdown_for(time_remaining).should == "01:02:30"
+      end
     end
 
-    it 'gives a negative counter when time is less than zero' do
-      @step.timer_for(-95).should == "-00:01:35"
+    context 'time is less than zero' do
+      let(:time_remaining) { -95 }
+
+      it 'gives a zeroed counter for timers' do
+        @step.timer_for(time_remaining).should == "00:00:00"
+      end
+
+      it 'gives a negative counter countdown' do
+        @step.countdown_for(time_remaining).should == "+00:01:35"
+      end
     end
   end
 end
