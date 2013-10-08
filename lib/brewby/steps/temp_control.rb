@@ -122,7 +122,7 @@ module Brewby
 
         if threshold_reached
           view.move 6, 0
-          view.addstr "Time Remaining: #{timer_for(time_remaining)}"
+          view.addstr "Time Remaining: #{countdown_for(time_remaining)}"
         end
       end
 

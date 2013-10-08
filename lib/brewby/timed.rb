@@ -28,17 +28,21 @@ module Brewby
 
     def timer_for seconds
       if seconds > 0
-        hours = seconds / 3600
-        seconds -= (hours * 3600)
-        minutes = seconds / 60
-        seconds -= minutes * 60
+        hours, minutes, seconds = time_from_seconds seconds
       else
-        hours = 0
-        minutes = 0
-        seconds = 0
+        hours, minutes, seconds = 0, 0, 0
       end
 
       "%0.2d:%0.2d:%0.2d" % [hours, minutes,seconds]
+    end
+
+    def time_from_seconds seconds
+      hours = seconds / 3600
+      seconds -= (hours * 3600)
+      minutes = seconds / 60
+      seconds -= minutes * 60
+
+      [hours, minutes, seconds]
     end
 
     def countdown_for seconds
