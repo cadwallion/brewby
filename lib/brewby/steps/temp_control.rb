@@ -19,6 +19,7 @@ module Brewby
         @output = options[:output]
         @threshold_reached = false
         @name = options[:name]
+        @last_reading = 0.0
 
         if automatic_control?
           configure_automatic_control options
@@ -54,7 +55,9 @@ module Brewby
       end
 
       def calculate_power_level
-        set_pulse_width pid.control read_input
+        if read_input
+          set_pulse_width pid.control @last_reading
+        end
       end
 
       def set_pulse_width width

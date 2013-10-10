@@ -51,6 +51,12 @@ describe Brewby::Steps::TempControl do
       @step.power_level.should == 1.0
       @step.output.pulse_width.should == 5000
     end
+
+    it 'does not explode with a faulty input' do
+      @step.stub(:read_input) { nil }
+      @step.calculate_power_level
+      @step.output.pulse_width.should == 0
+    end
   end
 
   context 'manual temperature control' do
@@ -111,7 +117,7 @@ describe Brewby::Steps::TempControl do
       it 'does not take a sensor reading if input does not exist' do
         @step = Brewby::Steps::TempControl.new mode: :manual, power_level: 0.85, output: element
         @step.step_iteration
-        @step.last_reading.should be_nil
+        @step.last_reading.should == 0.0
       end
     end
 
