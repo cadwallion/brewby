@@ -88,12 +88,23 @@ describe Brewby::Steps::TempControl do
     end
   end
 
-  it 'reads sensor input' do
-    @step = Brewby::Steps::TempControl.new mode: :auto, target: 155.0,
-      duration: 15, input: sensor, output: element
-    @step.input.should_receive(:read) { 115.0 }
-    @step.read_input
-    @step.last_reading.should == 115.0
+  context 'sensor input' do
+    before do
+      @step = Brewby::Steps::TempControl.new mode: :auto, target: 155.0,
+        duration: 15, input: sensor, output: element
+    end
+
+    it 'reads sensor input' do
+      @step.input.should_receive(:read) { 115.0 }
+      @step.read_input.should == 115.0
+      @step.last_reading.should == 115.0
+    end
+
+    it 'does not set last_reading if sensor input is faulty' do
+      @step.input.stub(:read) { nil }
+      @step.read_input.should be_nil
+      @step.last_reading.should == 0.0
+    end
   end
 
   describe 'step iteration' do
