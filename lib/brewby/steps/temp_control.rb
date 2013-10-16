@@ -116,7 +116,7 @@ module Brewby
         end
 
         view.move 6, 0
-        view.addstr "Power Level: #{power_level * 100.0}%".ljust(70)
+        view.addstr "Power Level: #{(power_level * 100.0).round(3)}%".ljust(70)
         view.move 16, 50
         view.addstr "Step Timer: #{timer_for(elapsed.to_i)}"
         view.refresh
