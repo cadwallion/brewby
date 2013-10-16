@@ -185,6 +185,8 @@ describe Brewby::Steps::TempControl do
     end
 
     describe 'rendering' do
+
+      let(:step) { Brewby::Steps::TempControl.new mode: :auto, target: 152.0, input: sensor, output: element }
       let(:view) { Brewby::VirtualView.new }
       before do
         step.instance_variable_set(:@last_reading, 100.0)
@@ -193,17 +195,22 @@ describe Brewby::Steps::TempControl do
 
       it 'renders the default name of the step' do
         line = view.readline(2).strip
-        line.should == "Manual Temp Control"
+        line.should == "Auto Temp Control"
       end
 
-      it 'renders the temperature' do
+      it 'renders the actual temperature' do
+        line = view.readline(5).strip
+        line.should == "Actual Temp: 100.0 F"
+      end
+
+      it 'renders the target temperature' do
         line = view.readline(4).strip
-        line.should == "Temperature: 100.0 F"
+        line.should == "Target Temp: 152.0 F"
       end
 
       it 'renders the current power level' do
-        line = view.readline(5).strip
-        line.should == "Power Level: 100.0%"
+        line = view.readline(6).strip
+        line.should == "Power Level: 0.0%"
       end
 
       it 'renders the step timer' do

@@ -115,17 +115,26 @@ module Brewby
           view.addstr "#{mode.capitalize} Temp Control".ljust(70)
         end
 
-        view.move 4, 0
-        view.addstr "Temperature: #{@last_reading} F".ljust(25)
-        view.move 5, 0
+        view.move 6, 0
         view.addstr "Power Level: #{power_level * 100.0}%".ljust(70)
         view.move 16, 50
         view.addstr "Step Timer: #{timer_for(elapsed.to_i)}"
         view.refresh
 
+        if target
+          view.move 4, 0
+          view.addstr "Target Temp: #{target} F".ljust(70)
+        end
+
+        view.move 5, 0
+        view.addstr "Actual Temp: #{@last_reading} F".ljust(25)
+
         if threshold_reached
-          view.move 6, 0
-          view.addstr "Time Remaining: #{countdown_for(time_remaining)}"
+          view.move 7, 0
+          view.addstr "Time Remaining: #{countdown_for(time_remaining)}".ljust(70)
+        else
+          view.move 7, 0
+          view.addstr "".ljust(70)
         end
       end
 
