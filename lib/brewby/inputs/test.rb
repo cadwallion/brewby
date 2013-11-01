@@ -4,10 +4,11 @@ module Brewby
       attr_accessor :name
       def initialize options = {}
         @name = options[:name]
+        @last_reading = 68.0
       end
 
       def read
-        (75 + rand(100)).to_f
+        @last_reading = (@last_reading + 0.1).round(2)
       end
     end
   end
