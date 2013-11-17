@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-$: << 'lib'
+$: << File.join(File.dirname(__FILE__), '..', 'lib')
 require 'bundler/setup'
 require 'thor'
 require 'brewby'
@@ -8,11 +8,11 @@ require 'pry'
 
 module Brewby
   class CLI < Thor
-    desc "start", "start Brewby"
+    desc "start RECIPE", "start Brewby"
     method_option :config, default: '~/.brewbyrc', aliases: '-c', desc: 'Brewby configuration file'
     method_option :adapter, default: 'raspberry_pi', desc: 'Brewby IO adapters to use'
     method_option :recipe, desc: 'Brewby recipe file to load'
-    def start
+    def start recipe
       Signal.trap(:INT) do
         puts "Shutting down"
         exit
@@ -32,14 +32,35 @@ module Brewby
       end
 
       application = Brewby::Application.new config
+      application.load_recipe recipe
 
-      if options[:recipe]
-        application.load_recipe options[:recipe]
-      else
-        application.add_step :temp_control, mode: :manual, power_level: 1.0
+      Shoes.app width: 640, height: 480 do
+        $app = self
+
+        flow do
+          title "Brewby"
+          @quit = button "QUIT"
+          @quit.click do
+            exit
+          end
+        end
+
+        stack do
+          subtitle application.name
+          @start = button "START"
+          @start.click do
+            @started = true
+            application.start_timer
+            application.ready = true
+          end
+        end
+
+        animate do
+          if @started
+            application.tick
+          end
+        end
       end
-
-      application.start
     end
   end
 end

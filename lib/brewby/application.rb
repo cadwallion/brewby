@@ -1,6 +1,6 @@
 require 'brewby/inputs'
 require 'brewby/outputs'
-require 'brewby/view'
+#require 'brewby/view'
 
 module Brewby
   class Application
@@ -39,7 +39,7 @@ module Brewby
     end
 
     def configure_view
-      @view = Brewby::View.new
+      #@view = Brewby::View.new
     end
 
     def add_step step_type, options = {}
@@ -74,8 +74,6 @@ module Brewby
 
     def tick
       current_step.step_iteration
-      render
-      handle_input
     end
 
     def start_step step
@@ -83,30 +81,16 @@ module Brewby
       step.start_timer
     end
 
-    def handle_input
-      if (char = view.getch) == 'q'[0].ord
-        exit
-      elsif char == 'n'[0].ord
-        @current_step.stop_timer
-        @ready = true
-      else
-        @current_step.handle_input char
-      end
-    end
-
-    def render
-      view.move 1, 0
-      view.addstr "BREWBY: Brewing '#{@name}'" if @name
-      view.move 2, 0
-      view.addstr "Step #{@steps.index(current_step)+1}/#{@steps.size}: "
-      view.move 16, 0
-      view.addstr "Brew Timer: #{timer_for(elapsed.to_i)}"
-      view.refresh
-      current_step.render(view)
-    end
-
     def current_step
       @current_step || @steps[0]
+    end
+
+    def next_step
+      if @current_step
+        @steps[@steps.index(@current_step)+1]
+      else
+        @steps[0]
+      end
     end
   end
 end

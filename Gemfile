@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'thor'
-gem 'ffi-ncurses'
 
 group :development do
   gem 'temper-control'

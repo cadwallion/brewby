@@ -46,5 +46,9 @@ module Brewby
 
       [hours, minutes, seconds]
     end
+
+    def brew_time
+      timer_for(elapsed.to_i)
+    end
   end
 end

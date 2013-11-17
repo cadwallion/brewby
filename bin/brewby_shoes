@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+$: << File.join(File.dirname(__FILE__), '..', 'lib')
+require 'brewby'
+require 'json'
+require 'thor'
+
+module Brewby
+  class CLI < Thor
+    desc "start RECIPE", "start Brewby"
+    method_option :config, default: '~/.brewbyrc', aliases: '-c', desc: 'Brewby configuration file'
+    method_option :adapter, default: 'raspberry_pi', desc: 'Brewby IO adapters to use'
+    method_option :recipe, desc: 'Brewby recipe file to load'
+    def start recipe
+      config = JSON.parse File.read(File.expand_path(options[:config])), symbolize_names: true
+      application = Brewby::Application.new config
+      application.load_recipe recipe
+
+      Shoes.app width: 640, height: 480 do
+        view = Brewby::Views::Application.new(self, application)
+        view.render
+      end
+    end
+  end
+end
+
+args = ARGV.dup
+args.shift
+Brewby::CLI.start(args)
