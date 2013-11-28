@@ -19,7 +19,11 @@ module Brewby
             @countdown = $app.para "", left: 0, top: 150
 
             @actual = $app.para "Actual: #{@step.last_reading}F", left: 0, top: 100
-            @power_output = $app.para "Power Output: 0.0%", left: 0, top: 125
+            $app.flow do
+              @power_output_progress = $app.progress left: 0, top: 115
+              @power_output_progress.fraction = 0.5
+              @power_output = $app.para "Power Output: 0.0%", left: 0, top: 130
+            end
 
             if @application.next_step
               @next_step = $app.button "Next Step", left: 550, top: 300
@@ -57,7 +61,9 @@ module Brewby
         @mode.replace "Mode: #{@step.mode}"
         @target.replace "Target: #{@step.target}F"
         @actual.replace "Actual: #{@step.last_reading}F"
+
         @power_output.replace "Power Output: #{(@step.power_level * 100.0).round(3)}%"
+        @power_output_progress.fraction = @step.power_level
 
         if @step.threshold_reached
           @countdown.replace "Time Remaining: #{@step.countdown_for(@step.time_remaining)}"
