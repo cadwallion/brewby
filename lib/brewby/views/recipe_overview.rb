@@ -29,7 +29,7 @@ module Brewby
         @application.start_timer
         first_step = @application.steps.first
         @application.start_step(first_step)
-        $subview = Brewby::Views::Step.new @parent, first_step, @application
+        $subview = Brewby::Views::Step.new @parent, first_step
         $subview.render
       end
 

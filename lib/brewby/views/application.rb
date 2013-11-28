@@ -18,6 +18,7 @@ module Brewby
             @application.tick
             update_brew_timer
             update_step_timer
+            update_next_step
             update_subview
           end
         end
@@ -39,8 +40,26 @@ module Brewby
 
           @bottom_stack = @context.flow width: 640, height: 50 do
             @context.background @context.gray
+            $app.flow do
+              @brew_timer = @context.caption "", top: 15, left: 15
+              @step_timer = @context.caption "", top: 15, left: 250
+
+              @next_step = $app.button "Next Step", top: 10, left: 530
+              @next_step.click do
+                start_next_step
+              end
+            end
+            @next_step.hide
           end
         end
+      end
+
+      def start_next_step
+        step = @application.next_step
+        @application.current_step.stop_timer
+        @application.start_step(step)
+        $subview = Brewby::Views::Step.new @parent, step
+        $subview.render
       end
 
       def render_recipe_overview
@@ -49,23 +68,19 @@ module Brewby
       end
 
       def update_brew_timer
-        unless @brew_timer
-          @bottom_stack.append do
-            @brew_timer = @context.caption "", top: 15
-          end
-        end
-
         @brew_timer.replace "Brew Timer: #{@application.brew_time}"
       end
 
       def update_step_timer
-        unless @step_timer
-          @bottom_stack.append do
-            @step_timer = @context.caption "", top: 15, left: 450
-          end
-        end
-
         @step_timer.replace "Step Timer: #{@application.current_step.brew_time}"
+      end
+
+      def update_next_step
+        if @application.started? && @application.next_step
+          @next_step.show
+        else
+          @next_step.hide
+        end
       end
 
       def update_subview
