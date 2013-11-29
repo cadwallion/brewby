@@ -58,7 +58,7 @@ module Brewby
         step = @application.next_step
         @application.current_step.stop_timer
         @application.start_step(step)
-        $subview = Brewby::Views::Step.new @parent, step
+        $subview = Brewby::Views::Step.new @step_stack, step
         $subview.render
       end
 
