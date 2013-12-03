@@ -6,7 +6,7 @@ require 'temper'
 module Brewby
   module Steps
     class TempControl
-      attr_reader :input, :output, :pid, :target, :duration, :mode, :last_reading, :threshold_reached, :name
+      attr_reader :input, :output, :pid, :target, :duration, :mode, :threshold_reached, :name, :readings
 
       include Brewby::Timed
 
@@ -19,13 +19,17 @@ module Brewby
         @output = options[:output]
         @threshold_reached = false
         @name = options[:name]
-        @last_reading = 0.0
+        @readings = [{ value: 0.0,  time: Time.now }]
 
         if automatic_control?
           configure_automatic_control options
         else
           set_power_level options[:power_level] || 1.0
         end
+      end
+
+      def last_reading
+        @readings.last[:value]
       end
 
       def configure_automatic_control options
@@ -46,8 +50,10 @@ module Brewby
       end
 
       def read_input
-        reading = input.read
-        @last_reading = reading if reading
+        if reading = input.read
+          @readings.push({ value: reading, time: Time.now })
+        end
+        reading
       end
 
       def set_power_level level
@@ -56,7 +62,7 @@ module Brewby
 
       def calculate_power_level
         if read_input
-          set_pulse_width pid.control @last_reading
+          set_pulse_width pid.control last_reading
         end
       end
 
@@ -127,7 +133,7 @@ module Brewby
         end
 
         view.move 5, 0
-        view.addstr "Actual Temp: #{@last_reading} F".ljust(25)
+        view.addstr "Actual Temp: #{last_reading} F".ljust(25)
 
         if threshold_reached
           view.move 7, 0
