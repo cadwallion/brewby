@@ -10,5 +10,5 @@ end
 group :test do
   gem 'rspec'
   gem 'pry'
-  gem 'pry-debugger'
+  #gem 'pry-debugger'
 end
