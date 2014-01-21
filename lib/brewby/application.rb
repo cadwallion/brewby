@@ -66,7 +66,6 @@ module Brewby
 
     def tick
       current_step.step_iteration
-      handle_input
     end
 
     def start_step step
