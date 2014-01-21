@@ -1,7 +1,7 @@
 $: << File.join(File.dirname(__FILE__), '..', 'lib')
 require 'brewby'
 
-class StepMash < Brewby::Application
+class RecipeLoader < Brewby::Application
   def tick
     super
     render_status
@@ -16,9 +16,13 @@ class StepMash < Brewby::Application
   end
 end
 
-application = StepMash.new adapter: 'test', inputs: [{}], outputs: [{}]
-application.add_step :temp_control, target: 125.0, duration: 15
-application.add_step :temp_control, target: 155.0, duration: 35
-application.add_step :temp_control, target: 168.0, duration: 10
+app = RecipeLoader.new({
+  adapter: 'test', 
+  inputs: [{ name: 'hlt' }, { name: 'bk' }], 
+  outputs: [{ name: 'hlt' }, { name: 'bk' }]
+})
 
-application.start
+file = ARGV[0] || "examples/brewby_recipe.rb"
+puts "Loading Recipe #{file}"
+app.load_recipe File.expand_path(file)
+app.start
