@@ -5,3 +5,4 @@ gem 'brewby', path:'../brewby-core'
 
 gem 'rspec'
 gem 'pry'
+gem 'thor'

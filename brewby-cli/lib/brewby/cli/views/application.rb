@@ -53,6 +53,10 @@ module Brewby
           step_class_name = step.class.name.split("::").last
           @step_view = Brewby::CLI::Views.const_get(step_class_name).new step, view
         end
+
+        def clear
+          view.clear
+        end
       end
     end
   end
