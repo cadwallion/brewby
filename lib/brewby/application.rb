@@ -21,19 +21,27 @@ module Brewby
       @inputs = []
 
       @options[:inputs].each do |input_options|
-        sensor = Brewby::Inputs.adapter_class(@adapter).new input_options
-        @inputs.push sensor
+        add_input @adapter, input_options
       end
+    end
+
+    def add_input adapter, options = {}
+      sensor = Brewby::Inputs.adapter_class(adapter).new options
+      @inputs.push sensor
     end
 
     def configure_outputs
       @outputs = []
       
       @options[:outputs].each do |output_options|
-        output_adapter = Brewby::Outputs.adapter_class(@adapter).new output_options
-        element = Brewby::HeatingElement.new output_adapter, pulse_range: output_options[:pulse_range], name: output_options[:name]
-        @outputs.push element
+        add_output @adapter, output_options
       end
+    end
+
+    def add_output adapter, options = {}
+      output_adapter = Brewby::Outputs.adapter_class(adapter).new options
+      element = Brewby::HeatingElement.new output_adapter, pulse_range: options[:pulse_range], name: options[:name]
+      @outputs.push element
     end
 
     def add_step step_type, options = {}
