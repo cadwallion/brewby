@@ -1,6 +1,6 @@
-# Brewby Core
+# Brewby
 
-Core functionality underpinning Brewby - IO interfacing Layer, Recipe DSL, Configuration Loading,
+Brewby Core functionality underpinning Brewby - IO interfacing Layer, Recipe DSL, Configuration Loading,
 and more.
 
 This library is the foundation for brewery automation applications themselves.  Unless you are
@@ -9,7 +9,7 @@ writing a brewery automation application, you will not use this library directly
 
 ## Input Sensors
 
-brewby-core provides adapters for input sensors in a consistent interface.  The following adapters
+brewby provides adapters for input sensors in a consistent interface.  The following adapters
 are currently supported, with several more on the way:
 
 * `Brewby::Input::DS18B20` - Dallas 18B20 temperature sensors runnning on the One-Wire Bus
@@ -17,7 +17,7 @@ are currently supported, with several more on the way:
 
 ## Output Adapters
 
-brewby-core also provides an interface for controlling output for heat sources.  There are two
+brewby also provides an interface for controlling output for heat sources.  There are two
 layers to this system.  The first is the low-level interface adapters for output: GPIO, serial
 communication, etc.  These are what trigger the on/off states directly.  On top of that is the
 layer that handles knowing when to turn on/off a heating element.  We control this via the
