@@ -1,4 +1,4 @@
-PROJECTS = %w{brewby-core}
+PROJECTS = %w{brewby-core brewby-cli}
 
 task :default => :spec
 
