@@ -16,7 +16,7 @@ class StepMash < Brewby::Application
   end
 end
 
-application = StepMash.new adapter: 'test', inputs: [{}], outputs: [{}]
+application = StepMash.new inputs: [{}], outputs: [{}]
 application.add_step :temp_control, target: 125.0, duration: 15
 application.add_step :temp_control, target: 155.0, duration: 35
 application.add_step :temp_control, target: 168.0, duration: 10

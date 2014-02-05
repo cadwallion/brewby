@@ -5,9 +5,18 @@ describe Brewby::StepLoader do
     Brewby::Application.any_instance.stub(:render)
     Brewby::Application.any_instance.stub(:configure_view)
 
-    @application = Brewby::Application.new adapter: :test, 
-      outputs: [{ pin: 1, name: :hlt }, { pin: 2, name: :mlt }, { pin: 3, name: :bk }], 
-      inputs: [{ name: :hlt}, { name: :mlt }, { name: :bk }]
+    outputs = [
+      { adapter: :test, pin: 1, name: :hlt },
+      { adapter: :test, pin: 2, name: :mlt },
+      { adapter: :test, pin: 3, name: :bk }
+    ]
+    inputs = [
+      { adapter: :test, name: :hlt},
+      { adapter: :test, name: :mlt },
+      { adapter: :test, name: :bk }
+    ]
+
+    @application = Brewby::Application.new outputs: outputs, inputs: inputs
     @loader = Brewby::StepLoader.new @application
   end
 

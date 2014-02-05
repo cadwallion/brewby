@@ -17,7 +17,6 @@ class RecipeLoader < Brewby::Application
 end
 
 app = RecipeLoader.new({
-  adapter: 'test', 
   inputs: [{ name: 'hlt' }, { name: 'bk' }], 
   outputs: [{ name: 'hlt' }, { name: 'bk' }]
 })

@@ -3,20 +3,20 @@ require 'spec_helper'
 describe Brewby::Steps::DSL::Step do
   before do
     @outputs = [
-      { name: :hlt, pin: 3 },
-      { name: :mlt, pin: 2 },
-      { name: :bk, pin: 1 }
+      { adapter: :test, name: :hlt, pin: 3 },
+      { adapter: :test, name: :mlt, pin: 2 },
+      { adapter: :test, name: :bk, pin: 1 }
     ]
 
     @inputs = [
-      { name: :bk },
-      { name: :mlt },
-      { name: :hlt }
+      { adapter: :test, name: :bk },
+      { adapter: :test, name: :mlt },
+      { adapter: :test, name: :hlt }
     ]
 
     Brewby::Application.any_instance.stub(:render)
     Brewby::Application.any_instance.stub(:configure_view)
-    @application = Brewby::Application.new adapter: :test, outputs: @outputs, inputs: @inputs
+    @application = Brewby::Application.new outputs: @outputs, inputs: @inputs
     @step = Brewby::Steps::DSL::Step.new 'Test Step', @application
   end
 
