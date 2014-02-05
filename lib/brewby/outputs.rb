@@ -7,6 +7,8 @@ module Brewby
       case adapter
       when :test
         Brewby::Outputs::Test
+      when :gpio
+        Brewby::Outputs::GPIO
       else
         Brewby::Outputs::GPIO
       end

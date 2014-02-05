@@ -11,7 +11,6 @@ module Brewby
     def initialize options = {}
       @options = options
       @steps = []
-      @adapter = options[:adapter].to_sym
       configure_inputs
       configure_outputs
       @ready = false
@@ -21,7 +20,7 @@ module Brewby
       @inputs = []
 
       @options[:inputs].each do |input_options|
-        add_input @adapter, input_options
+        add_input input_options[:adapter].to_sym, input_options
       end
     end
 
@@ -34,7 +33,7 @@ module Brewby
       @outputs = []
       
       @options[:outputs].each do |output_options|
-        add_output @adapter, output_options
+        add_output output_options[:adapter].to_sym, output_options
       end
     end
 

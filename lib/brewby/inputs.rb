@@ -7,6 +7,8 @@ module Brewby
       case adapter
       when :test
         Brewby::Inputs::Test
+      when :ds18b20
+        Brewby::Inputs::DS18B20
       else
         Brewby::Inputs::DS18B20
       end

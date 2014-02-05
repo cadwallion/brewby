@@ -2,13 +2,19 @@ require 'spec_helper'
 
 describe Brewby::Application do
   before do
-    @output = {
+    @outputs = [{
       pin: 1,
-      pulse_range: 5000
-    }
+      pulse_range: 5000,
+      adapter: :test
+    }]
+
+    @inputs = [
+      { adapter: :test },
+      { adapter: :test, hardware_id: '28-ba1c9d2e48' }
+    ]
 
     Brewby::Application.any_instance.stub(:configure_view)
-    @application = Brewby::Application.new adapter: :test, outputs: [@output], inputs: [{}, {hardware_id: '28-ba1c9d2e48'}]
+    @application = Brewby::Application.new outputs: @outputs, inputs: @inputs
   end
   
   it 'should have one output' do

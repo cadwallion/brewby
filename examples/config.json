@@ -1,19 +1,26 @@
 {
-  "adapter":"raspberry_pi",
   "inputs":[
     {
+      "name":"hlt",
+      "adapter":"ds18b20",
       "hardware_id":"28-something"
     },
     {
+      "name":"bk",
+      "adapter":"ds18b20",
       "hardware_id":"28-somethingelse"
     }
   ],
   "outputs":[
     {
+      "name":"hlt",
+      "adapter":"gpio",
       "pulse_range":5000,
       "pin":17
     },
     {
+      "name":"bk",
+      "adapter":"gpio",
       "pulse_range":5000,
       "pin":19
     }
