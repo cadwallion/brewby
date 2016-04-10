@@ -2,9 +2,6 @@ require 'spec_helper'
 
 describe Brewby::StepLoader do
   before do
-    Brewby::Application.any_instance.stub(:render)
-    Brewby::Application.any_instance.stub(:configure_view)
-
     outputs = [
       { adapter: :test, pin: 1, name: :hlt },
       { adapter: :test, pin: 2, name: :mlt },
@@ -22,6 +19,6 @@ describe Brewby::StepLoader do
 
   it 'reads a Brewby process file' do
     @loader.load_file File.join(File.dirname(__FILE__), 'support', 'sample_recipe.rb')
-    @application.should have(4).steps
+    expect(@application.steps.length).to eql 4
   end
 end
