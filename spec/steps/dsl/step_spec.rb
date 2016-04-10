@@ -14,32 +14,30 @@ describe Brewby::Steps::DSL::Step do
       { adapter: :test, name: :hlt }
     ]
 
-    Brewby::Application.any_instance.stub(:render)
-    Brewby::Application.any_instance.stub(:configure_view)
     @application = Brewby::Application.new outputs: @outputs, inputs: @inputs
     @step = Brewby::Steps::DSL::Step.new 'Test Step', @application
   end
 
   it 'accepts a type' do
     @step.type :temp_control
-    @step.step_class.should == Brewby::Steps::TempControl
+    expect(@step.step_class).to be Brewby::Steps::TempControl
   end
 
   it 'accepts options on the type' do
     @step.type :temp_control, mode: :auto, target: 155.0, duration: 60
-    @step.options[:mode].should == :auto
-    @step.options[:target].should == 155.0
-    @step.options[:duration].should == 60
+    expect(@step.options[:mode]).to eql :auto
+    expect(@step.options[:target]).to eql 155.0
+    expect(@step.options[:duration]).to eql 60
   end
 
   it 'accepts a mode' do
     @step.mode :manual
-    @step.options[:mode].should == :manual
+    expect(@step.options[:mode]).to eql :manual
   end
 
   it 'accepts a target' do
     @step.target 155.0
-    @step.options[:target].should == 155.0
+    expect(@step.options[:target]).to eql 155.0
   end
 
   context 'creation' do
@@ -51,11 +49,11 @@ describe Brewby::Steps::DSL::Step do
     end
 
     it 'should translate the input correctly' do
-      @created_step.input.name.should == :mlt
+      expect(@created_step.input.name).to eql :mlt
     end
 
     it 'should translate the output correctly' do
-      @created_step.output.name.should == :bk
+      expect(@created_step.output.name).to eql :bk
     end
   end
 end

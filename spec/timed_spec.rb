@@ -10,28 +10,28 @@ describe Brewby::Timed do
   end
 
   it 'has a start time' do
-    @step.start_time.should be_nil
+    expect(@step.start_time).to be_nil
   end
 
   it 'has an end time' do
-    @step.end_time.should be_nil
+    expect(@step.end_time).to be_nil
   end
 
   context 'unstarted' do
     it 'is unstarted' do
-      @step.started?.should be_false
+      expect(@step.started?).to be false
     end
 
     it 'is unended' do
-      @step.ended?.should be_false
+      expect(@step.ended?).to be false
     end
 
     it 'is not in progress' do
-      @step.in_progress?.should be_false
+      expect(@step.in_progress?).to be false
     end
-    
+
     it 'has no elapsed time' do
-      @step.elapsed.should == 0
+      expect(@step.elapsed).to eql 0
     end
   end
 
@@ -41,20 +41,20 @@ describe Brewby::Timed do
     end
 
     it 'is started' do
-      @step.started?.should be_true
+      expect(@step.started?).to be true
     end
 
     it 'is not ended' do
-      @step.ended?.should be_false
+      expect(@step.ended?).to be false
     end
 
     it 'is in progress' do
-      @step.in_progress?.should be_true
+      expect(@step.in_progress?).to be true
     end
 
     it 'has an elapsed time' do
       elapsed = Time.now - @step.start_time
-      @step.elapsed.should be_within(1).of(elapsed)
+      expect(@step.elapsed).to be_within(1).of(elapsed)
     end
   end
 
@@ -65,20 +65,20 @@ describe Brewby::Timed do
     end
 
     it 'is started' do
-      @step.started?.should be_true
+      expect(@step.started?).to be true
     end
 
     it 'is ended' do
-      @step.ended?.should be_true
+      expect(@step.ended?).to be true
     end
 
     it 'is not in progress' do
-      @step.in_progress?.should be_false
+      expect(@step.in_progress?).to be false
     end
 
     it 'has an elapsed time' do
       elapsed = @step.end_time - @step.start_time
-      @step.elapsed.should == elapsed
+      expect(@step.elapsed).to eql elapsed
     end
   end
 
@@ -87,11 +87,11 @@ describe Brewby::Timed do
       let(:time_remaining) { 3750 }
 
       it 'gives a formatted timer' do
-        @step.timer_for(time_remaining).should == "01:02:30"
+        expect(@step.timer_for(time_remaining)).to eql "01:02:30"
       end
 
       it 'gives a formatted countdown' do
-        @step.countdown_for(time_remaining).should == "01:02:30"
+        expect(@step.countdown_for(time_remaining)).to eql "01:02:30"
       end
     end
 
@@ -99,11 +99,11 @@ describe Brewby::Timed do
       let(:time_remaining) { -95 }
 
       it 'gives a zeroed counter for timers' do
-        @step.timer_for(time_remaining).should == "00:00:00"
+        expect(@step.timer_for(time_remaining)).to eql "00:00:00"
       end
 
       it 'gives a negative counter countdown' do
-        @step.countdown_for(time_remaining).should == "+00:01:35"
+        expect(@step.countdown_for(time_remaining)).to eql "+00:01:35"
       end
     end
   end

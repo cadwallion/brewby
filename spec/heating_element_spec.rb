@@ -13,32 +13,32 @@ describe Brewby::HeatingElement do
 
   describe 'relay pulsing' do
     it 'turn on the relay when first pulsed' do
-      @element.should be_off
+      expect(@element.off?).to be true
       @element.pulse
-      @element.should be_on
+      expect(@element.off?).to be false
     end
 
     it 'turns on the relay while within pulse width' do
-      @element.should be_off
+      expect(@element.off?).to be true
       @element.instance_variable_set(:@pulse_range_end, millis_from_now(4))
       @element.pulse
-      @element.should be_on
+      expect(@element.on?).to be true
     end
 
     it 'turns off the relay when time exceeds pulse width' do
       @element.instance_variable_set(:@pulse_range_end, millis_from_now(5))
       @element.pulse
-      @element.should be_on
+      expect(@element.on?).to be true
       @element.instance_variable_set(:@pulse_range_end, millis_from_now(1))
       @element.pulse
-      @element.should be_off
+      expect(@element.off?).to be true
     end
-    
+
     it 'turns on the relay when time hits the next pulse range' do
-      @element.should be_off
+      expect(@element.off?).to be true
       @element.instance_variable_set(:@pulse_range_end, millis_from_now(-1))
       @element.pulse
-      @element.should be_on
+      expect(@element.on?).to be true
     end
   end
 end

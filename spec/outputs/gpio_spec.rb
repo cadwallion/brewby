@@ -16,20 +16,20 @@ describe Brewby::Outputs::GPIO do
     it 'initializes the GPIO pin via export' do
       Brewby::Outputs::GPIO.new pin: 1, gpio_path: @gpio_dir
       data = File.read "#{@gpio_dir}/export"
-      data.should == '1'
+      expect(data).to eql '1'
     end
 
     it 'initializes the GPIO pin direction' do
       Brewby::Outputs::GPIO.new pin: 1, gpio_path: @gpio_dir
       data = File.read "#{@gpio_dir}/gpio1/direction"
-      data.should == 'out'
+      expect(data).to eql 'out'
     end
 
     it 'does not initialize the GPIO pin if already initialized' do
       File.write "#{@gpio_dir}/gpio1/value", ""
       Brewby::Outputs::GPIO.new pin: 1, gpio_path: @gpio_dir
       data = File.read "#{@gpio_dir}/export"
-      data.should == ''
+      expect(data).to eql ''
     end
   end
 
@@ -45,21 +45,21 @@ describe Brewby::Outputs::GPIO do
 
     it 'sets the pin value to 1 when on' do
       @output.on
-      pin_value.should == '1'
+      expect(pin_value).to eql '1'
     end
 
     it 'sets the pin value to 0 when off' do
       @output.off
-      pin_value.should == '0'
+      expect(pin_value).to eql '0'
     end
 
     it 'returns false when off' do
-      @output.should_not be_on
+      expect(@output.on?).to be false
     end
 
     it 'returns true when on' do
       @output.on
-      @output.should be_on
+      expect(@output.on?).to be true
     end
   end
 end
